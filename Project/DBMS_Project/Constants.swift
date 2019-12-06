@@ -15,7 +15,7 @@ public struct Constants {
     static let mainColor = UIColor.rgbColor(r: 230, g: 178, b: 95, alpha: 1)
     
     struct ProductionServer {
-        static let baseURL = "https://api.themoviedb.org/3/"
+        static let baseURL = "http://130.61.58.200/api/v1/univer/"
         //get poster_path for image
         static let imageURL = "https://image.tmdb.org/t/p/w185/"
         //for detailedMovie

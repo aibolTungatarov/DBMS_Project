@@ -9,6 +9,15 @@
 import UIKit
 
 class ResultCollectionViewCell: UICollectionViewCell {
+    
+    var result: Result = Result(code: "few", name: "few", university_name: "few", city_name: "few") {
+        didSet {
+            professionCodeLabel.text = result.code
+            professionNameLabel.text = result.name
+            universityNameLabel.text = result.university_name
+            cityNameLabel.text = result.city_name
+        }
+    }
     lazy var professionCodeLabel: UILabel = {
         var lbl = UILabel()
         lbl.textColor = .lightGray
@@ -235,3 +244,4 @@ extension ResultCollectionViewCell {
         
     }
 }
+

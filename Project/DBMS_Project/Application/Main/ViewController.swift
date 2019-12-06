@@ -15,9 +15,16 @@
 
 import UIKit
 import SnapKit
+import RxCocoa
+import RxSwift
 
 class ViewController: UIViewController {
 
+    private let disposeBag = DisposeBag()
+    var resultsList: [Result] = []
+    var autoCompletionPossibilities: [String] = []
+    var autoCompleteCharacterCount = 0
+    var timer = Timer()
     lazy var titleLabel: UILabel = {
         let lbl = UILabel()
         let title = "Find your passion"
@@ -50,7 +57,6 @@ class ViewController: UIViewController {
         tf.layer.cornerRadius = 35
         tf.layer.borderColor = UIColor.black.cgColor
         tf.textColor = UIColor.rgbColor(r: 99, g: 99, b: 99, alpha: 1)
-        tf.isSecureTextEntry = true
         return tf
     }()
     
@@ -69,6 +75,7 @@ class ViewController: UIViewController {
     
     lazy var townTextField: UITextField = {
         let tf = PaddedTextField(frame: .zero)
+        tf.delegate = self
         tf.borderStyle = .none
         tf.autocapitalizationType = .none
         let placeholderAttr = NSAttributedString(string: "City", attributes: [NSAttributedString.Key.foregroundColor : UIColor.rgbColor(r: 170, g: 170, b: 170, alpha: 1)])
@@ -77,7 +84,6 @@ class ViewController: UIViewController {
         tf.layer.cornerRadius = 35
         tf.layer.borderColor = UIColor.black.cgColor
         tf.textColor = UIColor.rgbColor(r: 99, g: 99, b: 99, alpha: 1)
-        tf.isSecureTextEntry = true
         return tf
     }()
     
@@ -187,8 +193,30 @@ class ViewController: UIViewController {
     }
     
     @objc func showResultsDidTaped() {
+        validateFields()
+        let firstSubject = firstSubjectTextField.text!
+        let secondSubject = secondSubjectTextField.text!
+        let city = townTextField.text!
         let resultsVC = ResultsViewController()
-        self.navigationController?.pushViewController(resultsVC, animated: true)
+        getRecommendations(success: { results in
+            resultsVC.resultsList = results
+            self.navigationController?.pushViewController(resultsVC, animated: true)
+        }, failure: {
+            
+        }, firstSubject: firstSubject, secondSubject: secondSubject, city: city)
+    }
+    
+    func validateFields() {
+        guard let _ = firstSubjectTextField.text, !firstSubjectTextField.text!.isEmpty else {
+            return
+        }
+        
+        guard let _ = secondSubjectTextField.text, !secondSubjectTextField.text!.isEmpty else {
+            return
+        }
+        guard let _ = townTextField.text, !townTextField.text!.isEmpty else {
+            return
+        }
     }
     
     @objc func switchValueDidChange() {
@@ -198,5 +226,50 @@ class ViewController: UIViewController {
         else{
             print("off")
         }
+    }
+    
+    func formatSubstring(subString: String) -> String {
+        let formatted = String(subString.dropLast(autoCompleteCharacterCount)).lowercased().capitalized //5
+        return formatted
+    }
+    
+    
+    
+    func resetValues() {
+        autoCompleteCharacterCount = 0
+        townTextField.text = ""
+    }
+}
+
+// MARK: Requests
+extension ViewController {
+    func getRecommendations(success: @escaping ([Result]) -> Void, failure: @escaping () -> Void, firstSubject: String, secondSubject: String, city: String) {
+        getRecommendations(firstSubject: firstSubject, secondSubject: secondSubject, city: city)
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { results in
+                success(results)
+            }, onError: { (error) in
+                
+            }).disposed(by: disposeBag)
+    }
+    
+    func getRecommendations(firstSubject: String, secondSubject: String, city: String) -> Observable<[Result]> {
+        return ApiClient.shared.request(ApiRouter.getRecommendations(firstSubject: firstSubject, secondSubject: secondSubject, city: city))
+    }
+    
+}
+
+//MARK: TextField Delegate
+extension ViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool { //1
+        var subString = (textField.text!.capitalized as NSString).replacingCharacters(in: range, with: string) // 2
+        subString = formatSubstring(subString: subString)
+        
+        if subString.count == 0 { // 3 when a user clears the textField
+            resetValues()
+        } else {
+            searchAutocompleteEntriesWIthSubstring(substring: subString) //4
+        }
+        return true
     }
 }

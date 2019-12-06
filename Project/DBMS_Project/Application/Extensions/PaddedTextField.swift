@@ -12,6 +12,7 @@ open class PaddedTextField: UITextField {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        self.delegate = self
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -28,5 +29,17 @@ open class PaddedTextField: UITextField {
     
     override open func editingRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: padding)
+    }
+    
+}
+
+extension PaddedTextField: UITextFieldDelegate {
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.tintColor = Constants.mainColor
+        textField.layer.borderColor = Constants.mainColor.cgColor
+    }
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.tintColor = .white
+        textField.layer.borderColor = Constants.mainColor.cgColor
     }
 }

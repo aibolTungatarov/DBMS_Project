@@ -8,6 +8,9 @@
 
 import Foundation
 
-struct Result {
-    
+struct Result: Codable {
+    var code: String
+    var name: String
+    var university_name: String
+    var city_name: String
 }

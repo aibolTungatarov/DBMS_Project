@@ -12,7 +12,7 @@ import SnapKit
 class ResultsViewController: UIViewController {
     let cellId = "ResultTableViewCell"
     let cellSpacingHeight: CGFloat = 30
-    var results: [Result] = []
+    var resultsList: [Result] = []
     lazy var backBtn: UIButton = {
         let btn = UIButton()
         let image = UIImage(named: "back")?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
@@ -37,8 +37,6 @@ class ResultsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        results.append(Result())
-        results.append(Result())
         configUI()
         makeConstraints()
     }
@@ -63,11 +61,12 @@ class ResultsViewController: UIViewController {
 ///MARK: UITableView Delegates
 extension ResultsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return results.count
+        return resultsList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ResultCollectionViewCell
+        cell.result = resultsList[indexPath.row]
         return cell
     }
     
