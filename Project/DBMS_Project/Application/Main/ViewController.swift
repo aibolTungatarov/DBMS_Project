@@ -221,7 +221,7 @@ extension ViewController {
     
     func setupShowResultsBtn() {
         showResultsBtn = UIButton()
-        showResultsBtn.backgroundColor = .rgbColor(r: 230, g: 178, b: 95, alpha: 1)
+        showResultsBtn.backgroundColor = Constants.mainColor
         showResultsBtn.setTitle("Show Results", for: .normal)
         showResultsBtn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         showResultsBtn.layer.cornerRadius = 5

@@ -6,12 +6,13 @@
 //  Copyright © 2019 Aibol Tungatarov. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public struct Constants {
     
     static let ERROR_EMPTY_USERNAME = "Please enter an username"
     static let ERROR_EMPTY_PASSWORD = "Please enter a password"
+    static let mainColor = UIColor.rgbColor(r: 230, g: 178, b: 95, alpha: 1)
     
     struct ProductionServer {
         static let baseURL = "https://api.themoviedb.org/3/"
