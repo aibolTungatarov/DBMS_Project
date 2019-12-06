@@ -22,7 +22,7 @@ class ViewController: UIViewController {
 
     private let disposeBag = DisposeBag()
     var resultsList: [Result] = []
-    var autoCompletionPossibilities: [String] = []
+    var autoCompletionPossibilities: [String] = ["Apple","Aktobe","Astana","Oral","Pavlodar","Pavl","Taraz"]
     var autoCompleteCharacterCount = 0
     var timer = Timer()
     lazy var titleLabel: UILabel = {
@@ -233,7 +233,56 @@ class ViewController: UIViewController {
         return formatted
     }
     
+    func searchAutocompleteEntriesWIthSubstring(substring: String) {
+        let userQuery = substring
+        let suggestions = getAutocompleteSuggestions(userText: substring) //1
+        
+        if suggestions.count > 0 {
+            timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { (timer) in //2
+                let autocompleteResult = self.formatAutocompleteResult(substring: substring, possibleMatches: suggestions) // 3
+                self.putColourFormattedTextInTextField(autocompleteResult: autocompleteResult, userQuery : userQuery) //4
+                self.moveCaretToEndOfUserQueryPosition(userQuery: userQuery) //5
+            })
+        } else {
+            timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { (timer) in //7
+                self.townTextField.text = substring
+            })
+            autoCompleteCharacterCount = 0
+        }
+    }
     
+    func getAutocompleteSuggestions(userText: String) -> [String]{
+        var possibleMatches: [String] = []
+        for item in autoCompletionPossibilities { //2
+            let myString:NSString! = item as NSString
+            let substringRange :NSRange! = myString.range(of: userText)
+            
+            if (substringRange.location == 0)
+            {
+                possibleMatches.append(item)
+            }
+        }
+        return possibleMatches
+    }
+    
+    func putColourFormattedTextInTextField(autocompleteResult: String, userQuery : String) {
+        let colouredString: NSMutableAttributedString = NSMutableAttributedString(string: userQuery + autocompleteResult)
+        colouredString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.green, range: NSRange(location: userQuery.count,length:autocompleteResult.count))
+        self.townTextField.attributedText = colouredString
+    }
+    func moveCaretToEndOfUserQueryPosition(userQuery : String) {
+        if let newPosition = self.townTextField.position(from: self.townTextField.beginningOfDocument, offset: userQuery.count) {
+            self.townTextField.selectedTextRange = self.townTextField.textRange(from: newPosition, to: newPosition)
+        }
+        let selectedRange: UITextRange? = townTextField.selectedTextRange
+        townTextField.offset(from: townTextField.beginningOfDocument, to: (selectedRange?.start)!)
+    }
+    func formatAutocompleteResult(substring: String, possibleMatches: [String]) -> String {
+        var autoCompleteResult = possibleMatches[0]
+        autoCompleteResult.removeSubrange(autoCompleteResult.startIndex..<autoCompleteResult.index(autoCompleteResult.startIndex, offsetBy: substring.count))
+        autoCompleteCharacterCount = autoCompleteResult.count
+        return autoCompleteResult
+    }
     
     func resetValues() {
         autoCompleteCharacterCount = 0
