@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ResultTableViewCell: UITableViewCell {
+class ResultCollectionViewCell: UICollectionViewCell {
     lazy var professionCodeLabel: UILabel = {
         var lbl = UILabel()
         lbl.textColor = .lightGray
@@ -39,6 +39,7 @@ class ResultTableViewCell: UITableViewCell {
     lazy var universityNameLabel: UILabel = {
         var lbl = UILabel()
         lbl.text = "Казахский национальный медицинский университет имени С. Д. Асфендиярова (КазНМУ)"
+        lbl.preferredMaxLayoutWidth = CGFloat(UIScreen.main.bounds.width - 40)
         lbl.numberOfLines = 0
         return lbl
     }()
@@ -98,13 +99,11 @@ class ResultTableViewCell: UITableViewCell {
         //        showResultsBtn.contentEdgeInsets = UIEdgeInsets(top: 20, left: 30, bottom: 20, right: 30);
         btn.imageEdgeInsets = UIEdgeInsets(top: 5, left: 20, bottom: 5, right: 5)
         //        showResultsBtn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: (showResultsBtn.imageView?.frame.width ?? 0))
-        let imageView = UIImageView()
         let image = UIImage(named: "go")?.withRenderingMode(.alwaysTemplate)
-        imageView.image = image
-        imageView.tintColor = .white
-        btn.setImage(imageView.image, for: .normal)
+        btn.setImage(image, for: .normal)
         //        showResultsBtn.semanticContentAttribute = UIApplication.shared
         //            .userInterfaceLayoutDirection == .rightToLeft ? .forceLeftToRight : .forceRightToLeft
+        btn.tintColor = .white
         return btn
     }()
     lazy var cityNameLabel: UILabel = {
@@ -118,21 +117,38 @@ class ResultTableViewCell: UITableViewCell {
         return lbl
     }()
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView.layer.cornerRadius = 10
+        self.contentView.layer.borderWidth = 2.0
+        self.contentView.layer.borderColor = UIColor.clear.cgColor
+        self.contentView.layer.masksToBounds = true
+        
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.cornerRadius = 10
+        self.layer.shadowOffset = CGSize(width: 0, height: 2.0)
+        self.layer.shadowRadius = 2.0
+        self.layer.shadowOpacity = 0.5
+        self.layer.masksToBounds = false
+        self.layer.shadowPath = UIBezierPath(roundedRect: self.bounds, cornerRadius: self.contentView.layer.cornerRadius).cgPath
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.configUI()
-        self.makeConstraints()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configUI()
+        makeConstraints()
     }
 }
 
 
 // MARK: ConfigUI and Constraints
-extension ResultTableViewCell {
+extension ResultCollectionViewCell {
     func configUI() {
+        backgroundColor = .white
         addSubview(professionCodeLabel)
         addSubview(professionNameLabel)
         addSubview(profSeparationView)
@@ -211,6 +227,7 @@ extension ResultTableViewCell {
             make.top.equalTo(moreInfoSeparionView.snp.bottom).offset(15)
             make.left.right.equalTo(professionCodeLabel)
             make.height.equalTo(50)
+            make.bottom.equalToSuperview().offset(-15)
         }
     }
     

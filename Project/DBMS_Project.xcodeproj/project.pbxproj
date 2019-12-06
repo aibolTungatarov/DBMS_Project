@@ -17,7 +17,7 @@
 		FB8990C8238FC59400C05F00 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8990C7238FC59400C05F00 /* ApiRequest.swift */; };
 		FB8990CA238FC5C000C05F00 /* ApiRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8990C9238FC5C000C05F00 /* ApiRouter.swift */; };
 		FB8990CC238FC66A00C05F00 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8990CB238FC66A00C05F00 /* ResultsViewController.swift */; };
-		FB8990CE238FC73900C05F00 /* ResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8990CD238FC73900C05F00 /* ResultTableViewCell.swift */; };
+		FB8990CE238FC73900C05F00 /* ResultCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8990CD238FC73900C05F00 /* ResultCollectionViewCell.swift */; };
 		FB8990D0238FCAAD00C05F00 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8990CF238FCAAD00C05F00 /* Result.swift */; };
 		FB8990D2238FCB1300C05F00 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8990D1238FCB1300C05F00 /* Constants.swift */; };
 /* End PBXBuildFile section */
@@ -37,7 +37,7 @@
 		FB8990C7238FC59400C05F00 /* ApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
 		FB8990C9238FC5C000C05F00 /* ApiRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRouter.swift; sourceTree = "<group>"; };
 		FB8990CB238FC66A00C05F00 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
-		FB8990CD238FC73900C05F00 /* ResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewCell.swift; sourceTree = "<group>"; };
+		FB8990CD238FC73900C05F00 /* ResultCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB8990CF238FCAAD00C05F00 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		FB8990D1238FCB1300C05F00 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = ../Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -115,7 +115,7 @@
 		FBBD5ACB2392B14400DE0388 /* Results */ = {
 			isa = PBXGroup;
 			children = (
-				FB8990CD238FC73900C05F00 /* ResultTableViewCell.swift */,
+				FB8990CD238FC73900C05F00 /* ResultCollectionViewCell.swift */,
 				FB8990CB238FC66A00C05F00 /* ResultsViewController.swift */,
 			);
 			path = Results;
@@ -288,7 +288,7 @@
 				FB8990D2238FCB1300C05F00 /* Constants.swift in Sources */,
 				FB8990AB238EBD7100C05F00 /* AppDelegate.swift in Sources */,
 				FB8990C8238FC59400C05F00 /* ApiRequest.swift in Sources */,
-				FB8990CE238FC73900C05F00 /* ResultTableViewCell.swift in Sources */,
+				FB8990CE238FC73900C05F00 /* ResultCollectionViewCell.swift in Sources */,
 				FB8990C6238FC57500C05F00 /* ApiClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
