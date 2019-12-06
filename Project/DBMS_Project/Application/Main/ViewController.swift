@@ -28,7 +28,12 @@ class ViewController: UIViewController {
     }()
     
     lazy var firstSubjectTextField: UITextField = {
-        let tf = UITextField()
+        let tf = PaddedTextField()
+        let placeholderAttr = NSAttributedString(string: "First Subject", attributes: [NSAttributedString.Key.foregroundColor : UIColor.rgbColor(r: 170, g: 170, b: 170, alpha: 1)])
+        tf.attributedPlaceholder = placeholderAttr
+        tf.backgroundColor = .white
+        tf.layer.cornerRadius = 35
+        tf.layer.borderColor = UIColor.black.cgColor
         tf.borderStyle = .none
         tf.autocapitalizationType = .none
         tf.textColor = UIColor.rgbColor(r: 99, g: 99, b: 99, alpha: 1)
@@ -36,26 +41,41 @@ class ViewController: UIViewController {
     }()
     
     lazy var secondSubjectTextField: UITextField = {
-        var tf = UITextField()
+        var tf = PaddedTextField()
         tf.borderStyle = .none
         tf.autocapitalizationType = .none
+        let placeholderAttr = NSAttributedString(string: "Second Subject", attributes: [NSAttributedString.Key.foregroundColor : UIColor.rgbColor(r: 170, g: 170, b: 170, alpha: 1)])
+        tf.attributedPlaceholder = placeholderAttr
+        tf.backgroundColor = .white
+        tf.layer.cornerRadius = 35
+        tf.layer.borderColor = UIColor.black.cgColor
         tf.textColor = UIColor.rgbColor(r: 99, g: 99, b: 99, alpha: 1)
         tf.isSecureTextEntry = true
         return tf
     }()
     
     lazy var entScoreTextField: UITextField = {
-        let tf = UITextField()
+        let tf = PaddedTextField(frame: .zero)
         tf.borderStyle = .none
         tf.autocapitalizationType = .none
+        let placeholderAttr = NSAttributedString(string: "Exam Score", attributes: [NSAttributedString.Key.foregroundColor : UIColor.rgbColor(r: 170, g: 170, b: 170, alpha: 1)])
+        tf.attributedPlaceholder = placeholderAttr
+        tf.backgroundColor = .white
+        tf.layer.cornerRadius = 35
+        tf.layer.borderColor = UIColor.black.cgColor
         tf.textColor = UIColor.rgbColor(r: 99, g: 99, b: 99, alpha: 1)
         return tf
     }()
     
     lazy var townTextField: UITextField = {
-        let tf = UITextField()
+        let tf = PaddedTextField(frame: .zero)
         tf.borderStyle = .none
         tf.autocapitalizationType = .none
+        let placeholderAttr = NSAttributedString(string: "City", attributes: [NSAttributedString.Key.foregroundColor : UIColor.rgbColor(r: 170, g: 170, b: 170, alpha: 1)])
+        tf.attributedPlaceholder = placeholderAttr
+        tf.backgroundColor = .white
+        tf.layer.cornerRadius = 35
+        tf.layer.borderColor = UIColor.black.cgColor
         tf.textColor = UIColor.rgbColor(r: 99, g: 99, b: 99, alpha: 1)
         tf.isSecureTextEntry = true
         return tf
@@ -88,9 +108,10 @@ class ViewController: UIViewController {
     
     lazy var canRelocateSwitch: UISwitch = {
         let switchDemo = UISwitch()
+        switchDemo.tintColor = .white
         switchDemo.isOn = false
         switchDemo.setOn(false, animated: false)
-        switchDemo.addTarget(self, action: Selector(("switchValueDidChange:")), for: .valueChanged)
+        switchDemo.addTarget(self, action: #selector(switchValueDidChange), for: .valueChanged)
         return switchDemo
     }()
     
@@ -132,7 +153,7 @@ class ViewController: UIViewController {
         firstSubjectTextField.snp.makeConstraints { (make) in
             make.top.equalTo(titleLabel.snp.bottom).offset(20)
             make.left.right.equalTo(titleLabel)
-            make.height.equalTo(40)
+            make.height.equalTo(70)
         }
         secondSubjectTextField.snp.makeConstraints { (make) in
             make.top.equalTo(firstSubjectTextField.snp.bottom).offset(20)
@@ -161,7 +182,7 @@ class ViewController: UIViewController {
         showResultsBtn.snp.makeConstraints { (make) in
             make.top.equalTo(canRelocateLabel.snp.bottom).offset(20)
             make.left.right.equalTo(titleLabel)
-            make.height.equalTo(firstSubjectTextField)
+            make.height.equalTo(60)
         }
     }
     

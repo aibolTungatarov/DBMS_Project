@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		527BA0E55563E69EF0F4DE64 /* Pods_DBMS_Project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9994328F9C23D56E676DF345 /* Pods_DBMS_Project.framework */; };
+		FB681FF2239A53C400B6609E /* PaddedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB681FF1239A53C400B6609E /* PaddedTextField.swift */; };
 		FB8990AB238EBD7100C05F00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8990AA238EBD7100C05F00 /* AppDelegate.swift */; };
 		FB8990AD238EBD7100C05F00 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8990AC238EBD7100C05F00 /* ViewController.swift */; };
 		FB8990B2238EBD7200C05F00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB8990B1238EBD7200C05F00 /* Assets.xcassets */; };
@@ -26,6 +27,7 @@
 		634B2416D08A924976D05525 /* Pods-DBMS_Project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBMS_Project.debug.xcconfig"; path = "Target Support Files/Pods-DBMS_Project/Pods-DBMS_Project.debug.xcconfig"; sourceTree = "<group>"; };
 		7496361E7CC1CF009F07EAE1 /* Pods-DBMS_Project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBMS_Project.release.xcconfig"; path = "Target Support Files/Pods-DBMS_Project/Pods-DBMS_Project.release.xcconfig"; sourceTree = "<group>"; };
 		9994328F9C23D56E676DF345 /* Pods_DBMS_Project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DBMS_Project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB681FF1239A53C400B6609E /* PaddedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedTextField.swift; sourceTree = "<group>"; };
 		FB8990A7238EBD7100C05F00 /* DBMS_Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DBMS_Project.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB8990AA238EBD7100C05F00 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB8990AC238EBD7100C05F00 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				FB8990BC238F8FCF00C05F00 /* Extensions.swift */,
+				FB681FF1239A53C400B6609E /* PaddedTextField.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 				FB8990D0238FCAAD00C05F00 /* Result.swift in Sources */,
 				FB8990AD238EBD7100C05F00 /* ViewController.swift in Sources */,
 				FB8990CA238FC5C000C05F00 /* ApiRouter.swift in Sources */,
+				FB681FF2239A53C400B6609E /* PaddedTextField.swift in Sources */,
 				FB8990BD238F8FCF00C05F00 /* Extensions.swift in Sources */,
 				FB8990CC238FC66A00C05F00 /* ResultsViewController.swift in Sources */,
 				FB8990D2238FCB1300C05F00 /* Constants.swift in Sources */,
