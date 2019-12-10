@@ -12,7 +12,7 @@ public struct Constants {
     
     static let ERROR_EMPTY_USERNAME = "Please enter an username"
     static let ERROR_EMPTY_PASSWORD = "Please enter a password"
-    static let mainColor = UIColor.rgbColor(r: 230, g: 178, b: 95, alpha: 1)
+    static let mainColor = UIColor.rgbColor(r: 61, g: 64, b: 113, alpha: 1)
     
     struct ProductionServer {
         static let baseURL = "http://130.61.58.200/api/v1/univer/"
@@ -36,4 +36,10 @@ enum HTTPHeaderField: String {
 
 enum ContentType: String {
     case json = "application/json; charset=utf-8"
+}
+
+enum AutocompleteTextFieldType: String {
+    case city = "City"
+    case firstSubject = "First Subject"
+    case secondSubject = "Second Subject"
 }

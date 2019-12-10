@@ -9,5 +9,6 @@
 import Foundation
 
 struct Results: Codable {
-    
+    var profession: String
+    var specialities: [Speciality]
 }

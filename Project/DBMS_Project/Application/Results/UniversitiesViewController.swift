@@ -1,18 +1,18 @@
 //
-//  ResultsViewController.swift
+//  UniversitiesViewController.swift
 //  DBMS_Project
 //
-//  Created by Aibol Tungatarov on 11/28/19.
+//  Created by Aibol Tungatarov on 12/10/19.
 //  Copyright © 2019 Aibol Tungatarov. All rights reserved.
 //
 
 import UIKit
-import SnapKit
 
-class ResultsViewController: UIViewController {
+class UniversitiesViewController: UIViewController {
+    
     let cellId = "ResultTableViewCell"
     let cellSpacingHeight: CGFloat = 30
-    var resultsList: [Results] = []
+    var universitiesList: [University] = []
     lazy var backBtn: UIButton = {
         let btn = UIButton()
         let image = UIImage(named: "back")?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
@@ -22,28 +22,22 @@ class ResultsViewController: UIViewController {
         return btn
     }()
     
-    lazy var resultsCollectionView: UICollectionView = {
+    lazy var universitiesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = cellSpacingHeight
-//        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        layout.estimatedItemSize = CGSize(width: 1, height: 1)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.register(ResultCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+        cv.register(UniversitiesCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
         cv.backgroundColor = Constants.mainColor
         cv.dataSource = self
         cv.delegate = self
         cv.isScrollEnabled = true
-        cv.isUserInteractionEnabled = true
         return cv
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        resultsList.append(Results(profession: "UX/UI designeer", specialities: [Speciality(name: "Computer Science", code: "231", universities: [
-                University(name: "Suleyman Demirel University", site: "ewq", code: 123, city: "few", grant_total: 321, grant_rus: 32, grant_kaz: 32)
-            ]), Speciality(name: "Information systems", code: "231", universities: [])]))
-        resultsList.append(Results(profession: "UX/UI designeer", specialities: [Speciality(name: "Computer Science", code: "231", universities: [
-            University(name: "Suleyman Demirel University", site: "ewq", code: 123, city: "few", grant_total: 321, grant_rus: 32, grant_kaz: 32)
-            ]), Speciality(name: "Information systems", code: "231", universities: [])]))
+        view.backgroundColor = .white
         configUI()
         makeConstraints()
     }
@@ -61,45 +55,43 @@ class ResultsViewController: UIViewController {
     @objc func backBtnDidTaped() {
         self.navigationController?.popViewController(animated: true)
     }
+    
 }
 
-
-
 ///MARK: UICollectionView Delegates
-extension ResultsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension UniversitiesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return resultsList.count
+        return universitiesList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ResultCollectionViewCell
-        cell.profession = resultsList[indexPath.row].profession
-        cell.specialities = resultsList[indexPath.row].specialities
-        cell.viewController = self
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! UniversitiesCollectionViewCell
+        cell.university = universitiesList[indexPath.row]
         return cell
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        return CGSize(width: view.bounds.width, height: 100)
-//    }
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    //        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    //    }
+    //
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    //        return CGSize(width: view.bounds.width, height: 100)
+    //    }
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let kWhateverHeightYouWant = 200
+        let kWhateverHeightYouWant = 300
         return CGSize(width: collectionView.bounds.size.width, height: CGFloat(kWhateverHeightYouWant))
     }
 }
 
 
 //MARK: ConfigUI and Constraints
-extension ResultsViewController {
+extension UniversitiesViewController {
     func configUI() {
         view.backgroundColor = Constants.mainColor
-        view.addSubview(resultsCollectionView)
+        view.addSubview(universitiesCollectionView)
         view.addSubview(backBtn)
     }
     
@@ -108,9 +100,9 @@ extension ResultsViewController {
             make.left.equalToSuperview().offset(20)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
         }
-        resultsCollectionView.snp.makeConstraints { (make) in
+        universitiesCollectionView.snp.makeConstraints { (make) in
             make.right.left.bottom.equalToSuperview()
-            make.top.equalTo(backBtn.snp.bottom).offset(10)
+            make.top.equalTo(backBtn.snp.bottom).offset(30)
         }
     }
 }

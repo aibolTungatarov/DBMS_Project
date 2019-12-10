@@ -12,7 +12,9 @@ import Foundation
 
 enum ApiRouter: ApiRequest {
     case getList(page: Int)
-    case getRecommendations(firstSubject: String, secondSubject: String, city: String)
+    case getRecommendations(firstSubject: String, secondSubject: String, city: String, score: Int, interface_lang: String)
+    case getCityList(interface_lang: String)
+    case getSubjectList(interface_lang: String)
     
     var path: String {
         switch self {
@@ -20,6 +22,10 @@ enum ApiRouter: ApiRequest {
             return "movie/popular"
         case .getRecommendations:
             return "recommendations/"
+        case .getCityList:
+            return "city/list"
+        case .getSubjectList:
+            return "subject/list"
         }
     }
     
@@ -27,15 +33,19 @@ enum ApiRouter: ApiRequest {
         switch self {
         case .getList(let page):
             return ["page": String(page), HTTPHeaderField.apiKey.rawValue: Constants.APIParameterKey.apiKey]
-        case .getRecommendations(let firstSubject, let secondSubject, let city):
-            return ["first_subject":firstSubject, "second_subject":secondSubject, "city": city]
+        case .getRecommendations(let firstSubject, let secondSubject, let city, let score, let interface_lang):
+            return ["first_subject":firstSubject, "second_subject":secondSubject, "city": city, "score": String(score), "interface_lang": interface_lang]
+        case .getCityList(let interface_lang):
+            return ["interface_lang": interface_lang]
+        case .getSubjectList(let interface_lang):
+            return ["interface_lang": interface_lang]
         }
         
     }
     
     var method: RequestType {
         switch self {
-        case .getList, .getRecommendations:
+        case .getList, .getRecommendations, .getCityList, .getSubjectList:
             return .GET
         }
     }

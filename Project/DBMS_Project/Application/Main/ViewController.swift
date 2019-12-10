@@ -17,13 +17,17 @@ import UIKit
 import SnapKit
 import RxCocoa
 import RxSwift
+import DLRadioButton
 
 class ViewController: UIViewController {
 
     private let disposeBag = DisposeBag()
-    var resultsList: [Result] = []
-    var autoCompletionPossibilities: [String] = ["Apple","Aktobe","Astana","Oral","Pavlodar","Pavl","Taraz"]
-    var autoCompleteCharacterCount = 0
+    var resultsList: [Results] = []
+    var cityAutoCompletionPossibilities: [String] = []
+    var subjectAutoCompletionPossibilities: [String] = []
+    var cityAutoCompleteCharacterCount = 0
+    var firstAutoCompleteCharacterCount = 0
+    var secondAutoCompleteCharacterCount = 0
     var timer = Timer()
     lazy var titleLabel: UILabel = {
         let lbl = UILabel()
@@ -36,6 +40,7 @@ class ViewController: UIViewController {
     
     lazy var firstSubjectTextField: UITextField = {
         let tf = PaddedTextField()
+        tf.delegate = self
         let placeholderAttr = NSAttributedString(string: "First Subject", attributes: [NSAttributedString.Key.foregroundColor : UIColor.rgbColor(r: 170, g: 170, b: 170, alpha: 1)])
         tf.attributedPlaceholder = placeholderAttr
         tf.backgroundColor = .white
@@ -50,6 +55,7 @@ class ViewController: UIViewController {
     lazy var secondSubjectTextField: UITextField = {
         var tf = PaddedTextField()
         tf.borderStyle = .none
+        tf.delegate = self
         tf.autocapitalizationType = .none
         let placeholderAttr = NSAttributedString(string: "Second Subject", attributes: [NSAttributedString.Key.foregroundColor : UIColor.rgbColor(r: 170, g: 170, b: 170, alpha: 1)])
         tf.attributedPlaceholder = placeholderAttr
@@ -79,6 +85,19 @@ class ViewController: UIViewController {
         tf.borderStyle = .none
         tf.autocapitalizationType = .none
         let placeholderAttr = NSAttributedString(string: "City", attributes: [NSAttributedString.Key.foregroundColor : UIColor.rgbColor(r: 170, g: 170, b: 170, alpha: 1)])
+        tf.attributedPlaceholder = placeholderAttr
+        tf.backgroundColor = .white
+        tf.layer.cornerRadius = 35
+        tf.layer.borderColor = UIColor.black.cgColor
+        tf.textColor = UIColor.rgbColor(r: 99, g: 99, b: 99, alpha: 1)
+        return tf
+    }()
+    
+    lazy var langTextField: UITextField = {
+        let tf = PaddedTextField(frame: .zero)
+        tf.borderStyle = .none
+        tf.autocapitalizationType = .none
+        let placeholderAttr = NSAttributedString(string: "Language: ", attributes: [NSAttributedString.Key.foregroundColor : UIColor.rgbColor(r: 170, g: 170, b: 170, alpha: 1)])
         tf.attributedPlaceholder = placeholderAttr
         tf.backgroundColor = .white
         tf.layer.cornerRadius = 35
@@ -121,12 +140,51 @@ class ViewController: UIViewController {
         return switchDemo
     }()
     
+    lazy var langLabel: UILabel = {
+        let lbl = UILabel()
+        let title = "Education languauge: "
+        let attributedText = NSMutableAttributedString(string: title, attributes: [NSAttributedString.Key.font : UIFont.init(name: "Didot", size: 20)!, NSAttributedString.Key.foregroundColor : UIColor.black ])
+        lbl.numberOfLines = 0
+        lbl.attributedText = attributedText
+        return lbl
+    }()
+    
+    lazy var kzButton: DLRadioButton = {
+        var btn = DLRadioButton()
+        return btn
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        getCityList(success: { (list) in
+            self.cityAutoCompletionPossibilities = list.data
+            var index = 0
+            for item in self.cityAutoCompletionPossibilities {
+                self.cityAutoCompletionPossibilities[index] = item.capitalizingFirstLetter()
+                print(self.cityAutoCompletionPossibilities[index])
+                index += 1
+            }
+        }, failure: {
+            
+        }, interface_lang: "en")
+        getSubjectList(success: { (list) in
+            self.subjectAutoCompletionPossibilities = list.data
+            var index = 0
+            for item in self.subjectAutoCompletionPossibilities {
+                self.subjectAutoCompletionPossibilities[index] = item.capitalizingFirstLetter()
+                print(self.subjectAutoCompletionPossibilities[index])
+                index += 1
+            }
+        }, failure: {
+            
+        }, interface_lang: "en")
+        
         view.backgroundColor = .white
         setupViews()
         makeConstraints()
     }
+    
+    var intLangs : [String] = ["KZ","EN","RU"];
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -139,6 +197,11 @@ class ViewController: UIViewController {
     }
     
     func setupViews() {
+        let picker = UIPickerView()
+        picker.delegate   = self
+        picker.dataSource = self
+        self.langTextField.inputView = picker
+        view.addSubview(langTextField)
         view.backgroundColor = UIColor.rgbColor(r: 232, g: 233, b: 237, alpha: 1)
         view.addSubview(titleLabel)
         view.addSubview(firstSubjectTextField)
@@ -176,8 +239,13 @@ class ViewController: UIViewController {
             make.left.right.equalTo(titleLabel)
             make.height.equalTo(firstSubjectTextField)
         }
-        canRelocateLabel.snp.makeConstraints { (make) in
+        langTextField.snp.makeConstraints { (make) in
             make.top.equalTo(townTextField.snp.bottom).offset(20)
+            make.left.right.equalTo(titleLabel)
+            make.height.equalTo(firstSubjectTextField)
+        }
+        canRelocateLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(langTextField.snp.bottom).offset(20)
             make.left.equalTo(titleLabel)
         }
         canRelocateSwitch.snp.makeConstraints { (make) in
@@ -196,14 +264,16 @@ class ViewController: UIViewController {
         validateFields()
         let firstSubject = firstSubjectTextField.text!
         let secondSubject = secondSubjectTextField.text!
-        let city = townTextField.text!
+        let city = canRelocateSwitch.isOn ? "ALL" : townTextField.text!
+        let interfaceLang = "en"
+        let score = 100
         let resultsVC = ResultsViewController()
         getRecommendations(success: { results in
             resultsVC.resultsList = results
             self.navigationController?.pushViewController(resultsVC, animated: true)
         }, failure: {
             
-        }, firstSubject: firstSubject, secondSubject: secondSubject, city: city)
+        }, firstSubject: firstSubject, secondSubject: secondSubject, city: city, score: score, interface_lang: interfaceLang)
     }
     
     func validateFields() {
@@ -229,34 +299,41 @@ class ViewController: UIViewController {
     }
     
     func formatSubstring(subString: String) -> String {
-        let formatted = String(subString.dropLast(autoCompleteCharacterCount)).lowercased().capitalized //5
+        let formatted = String(subString.dropLast(cityAutoCompleteCharacterCount)).lowercased().capitalized //5
         return formatted
     }
-    
-    func searchAutocompleteEntriesWIthSubstring(substring: String) {
+
+    func searchAutocompleteEntriesWIthSubstring(type: AutocompleteTextFieldType, isCity: Bool, substring: String) {
         let userQuery = substring
-        let suggestions = getAutocompleteSuggestions(userText: substring) //1
-        
+        let suggestions = getAutocompleteSuggestions(isCity: isCity, userText: substring) //1
         if suggestions.count > 0 {
             timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { (timer) in //2
                 let autocompleteResult = self.formatAutocompleteResult(substring: substring, possibleMatches: suggestions) // 3
-                self.putColourFormattedTextInTextField(autocompleteResult: autocompleteResult, userQuery : userQuery) //4
-                self.moveCaretToEndOfUserQueryPosition(userQuery: userQuery) //5
+                self.putColourFormattedTextInTextField(type: type, autocompleteResult: autocompleteResult, userQuery : userQuery) //4
+                self.moveCaretToEndOfUserQueryPosition(type: type, userQuery: userQuery) //5
             })
         } else {
             timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { (timer) in //7
-                self.townTextField.text = substring
+                switch (type) {
+                    case AutocompleteTextFieldType.city:
+                        self.townTextField.text = substring
+                    case AutocompleteTextFieldType.firstSubject:
+                        self.firstSubjectTextField.text = substring
+                    case AutocompleteTextFieldType.secondSubject:
+                        self.secondSubjectTextField.text = substring
+                }
+                
             })
-            autoCompleteCharacterCount = 0
+            cityAutoCompleteCharacterCount = 0
         }
     }
-    
-    func getAutocompleteSuggestions(userText: String) -> [String]{
+
+    func getAutocompleteSuggestions(isCity: Bool, userText: String) -> [String]{
         var possibleMatches: [String] = []
-        for item in autoCompletionPossibilities { //2
+        let list = isCity ? cityAutoCompletionPossibilities : subjectAutoCompletionPossibilities
+        for item in list { //2
             let myString:NSString! = item as NSString
             let substringRange :NSRange! = myString.range(of: userText)
-            
             if (substringRange.location == 0)
             {
                 possibleMatches.append(item)
@@ -264,36 +341,59 @@ class ViewController: UIViewController {
         }
         return possibleMatches
     }
-    
-    func putColourFormattedTextInTextField(autocompleteResult: String, userQuery : String) {
+
+    func putColourFormattedTextInTextField(type: AutocompleteTextFieldType, autocompleteResult: String, userQuery : String) {
         let colouredString: NSMutableAttributedString = NSMutableAttributedString(string: userQuery + autocompleteResult)
         colouredString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.green, range: NSRange(location: userQuery.count,length:autocompleteResult.count))
-        self.townTextField.attributedText = colouredString
-    }
-    func moveCaretToEndOfUserQueryPosition(userQuery : String) {
-        if let newPosition = self.townTextField.position(from: self.townTextField.beginningOfDocument, offset: userQuery.count) {
-            self.townTextField.selectedTextRange = self.townTextField.textRange(from: newPosition, to: newPosition)
+        switch (type) {
+        case AutocompleteTextFieldType.city:
+            self.townTextField.attributedText = colouredString
+        case AutocompleteTextFieldType.firstSubject:
+            self.firstSubjectTextField.attributedText = colouredString
+        case AutocompleteTextFieldType.secondSubject:
+            self.secondSubjectTextField.attributedText = colouredString
         }
-        let selectedRange: UITextRange? = townTextField.selectedTextRange
-        townTextField.offset(from: townTextField.beginningOfDocument, to: (selectedRange?.start)!)
+    }
+    func moveCaretToEndOfUserQueryPosition(type: AutocompleteTextFieldType, userQuery : String) {
+        switch (type) {
+        case AutocompleteTextFieldType.city:
+            if let newPosition = self.townTextField.position(from: self.townTextField.beginningOfDocument, offset: userQuery.count) {
+                self.townTextField.selectedTextRange = self.townTextField.textRange(from: newPosition, to: newPosition)
+            }
+            let selectedRange: UITextRange? = townTextField.selectedTextRange
+            townTextField.offset(from: townTextField.beginningOfDocument, to: (selectedRange?.start)!)
+        case AutocompleteTextFieldType.firstSubject:
+            if let newPosition = self.firstSubjectTextField.position(from: self.firstSubjectTextField.beginningOfDocument, offset: userQuery.count) {
+                self.firstSubjectTextField.selectedTextRange = self.townTextField.textRange(from: newPosition, to: newPosition)
+            }
+            let selectedRange: UITextRange? = firstSubjectTextField.selectedTextRange
+            firstSubjectTextField.offset(from: firstSubjectTextField.beginningOfDocument, to: (selectedRange?.start)!)
+        case AutocompleteTextFieldType.secondSubject:
+            if let newPosition = self.secondSubjectTextField.position(from: self.secondSubjectTextField.beginningOfDocument, offset: userQuery.count) {
+                self.secondSubjectTextField.selectedTextRange = self.secondSubjectTextField.textRange(from: newPosition, to: newPosition)
+            }
+            let selectedRange: UITextRange? = secondSubjectTextField.selectedTextRange
+            secondSubjectTextField.offset(from: secondSubjectTextField.beginningOfDocument, to: (selectedRange?.start)!)
+        }
     }
     func formatAutocompleteResult(substring: String, possibleMatches: [String]) -> String {
         var autoCompleteResult = possibleMatches[0]
         autoCompleteResult.removeSubrange(autoCompleteResult.startIndex..<autoCompleteResult.index(autoCompleteResult.startIndex, offsetBy: substring.count))
-        autoCompleteCharacterCount = autoCompleteResult.count
+        cityAutoCompleteCharacterCount = autoCompleteResult.count
+//        isCity ? cityAutoCompletionPossibilities : subjectAutoCompletionPossibilities
         return autoCompleteResult
     }
-    
-    func resetValues() {
-        autoCompleteCharacterCount = 0
-        townTextField.text = ""
+
+    func resetValues(textField: UITextField) {
+        cityAutoCompleteCharacterCount = 0
+        textField.text = ""
     }
 }
 
 // MARK: Requests
 extension ViewController {
-    func getRecommendations(success: @escaping ([Result]) -> Void, failure: @escaping () -> Void, firstSubject: String, secondSubject: String, city: String) {
-        getRecommendations(firstSubject: firstSubject, secondSubject: secondSubject, city: city)
+    func getRecommendations(success: @escaping ([Results]) -> Void, failure: @escaping () -> Void, firstSubject: String, secondSubject: String, city: String, score: Int, interface_lang: String) {
+        getRecommendations(firstSubject: firstSubject, secondSubject: secondSubject, city: city, score: score, interface_lang: interface_lang)
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { results in
                 success(results)
@@ -302,8 +402,36 @@ extension ViewController {
             }).disposed(by: disposeBag)
     }
     
-    func getRecommendations(firstSubject: String, secondSubject: String, city: String) -> Observable<[Result]> {
-        return ApiClient.shared.request(ApiRouter.getRecommendations(firstSubject: firstSubject, secondSubject: secondSubject, city: city))
+    func getRecommendations(firstSubject: String, secondSubject: String, city: String,  score: Int, interface_lang: String) -> Observable<[Results]> {
+        return ApiClient.shared.request(ApiRouter.getRecommendations(firstSubject: firstSubject, secondSubject: secondSubject, city: city, score: score, interface_lang: interface_lang))
+    }
+    
+    func getCityList(success: @escaping (List) -> Void, failure: @escaping () -> Void, interface_lang: String) {
+        getCityList(interface_lang: interface_lang)
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { list in
+                success(list)
+            }, onError: { (error) in
+                
+            }).disposed(by: disposeBag)
+    }
+    
+    func getCityList(interface_lang: String) -> Observable<List> {
+        return ApiClient.shared.request(ApiRouter.getCityList(interface_lang: interface_lang))
+    }
+    
+    func getSubjectList(success: @escaping (List) -> Void, failure: @escaping () -> Void, interface_lang: String) {
+        getSubjectList(interface_lang: interface_lang)
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { list in
+                success(list)
+            }, onError: { (error) in
+                
+            }).disposed(by: disposeBag)
+    }
+    
+    func getSubjectList(interface_lang: String) -> Observable<List> {
+        return ApiClient.shared.request(ApiRouter.getSubjectList(interface_lang: interface_lang))
     }
     
 }
@@ -315,10 +443,41 @@ extension ViewController: UITextFieldDelegate {
         subString = formatSubstring(subString: subString)
         
         if subString.count == 0 { // 3 when a user clears the textField
-            resetValues()
+            resetValues(textField: textField)
         } else {
-            searchAutocompleteEntriesWIthSubstring(substring: subString) //4
+            let isCity = textField.placeholder == "City" ? true : false
+            var type: AutocompleteTextFieldType = .secondSubject
+            if isCity {
+                type = .city
+            } else if textField.placeholder == "First Subject" {
+                type = .firstSubject
+            }
+            searchAutocompleteEntriesWIthSubstring(type: type ,isCity: isCity, substring: subString) //4
         }
         return true
+    }
+}
+
+
+//MARK: PickerView Delegate
+extension ViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1;
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+    {
+        return self.intLangs.count;
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
+    {
+        return self.intLangs[row];
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        self.langTextField.text = self.intLangs[row];
+        self.langTextField.endEditing(true)
     }
 }

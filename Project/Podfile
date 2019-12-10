@@ -11,4 +11,5 @@ target 'DBMS_Project' do
 	pod 'RxCocoa'
 	pod 'Alamofire'
 	pod 'SVProgressHUD'
+	pod 'DLRadioButton', '~> 1.4'
 end
