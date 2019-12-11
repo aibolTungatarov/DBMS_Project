@@ -265,11 +265,12 @@ class ViewController: UIViewController {
         let firstSubject = firstSubjectTextField.text!.lowercased()
         let secondSubject = secondSubjectTextField.text!.lowercased()
         let city = canRelocateSwitch.isOn ? "ALL" : townTextField.text!
-        let interfaceLang = "en"
+        let interfaceLang = langTextField.text!
         let score = Int(entScoreTextField.text!)
         getRecommendations(success: { results in
             let resultsVC = ResultsViewController()
             resultsVC.resultsList = results
+            print("AIBOL MMMM", results[0].specialities[0].universities.count)
             self.navigationController?.pushViewController(resultsVC, animated: true)
         }, failure: {
             
@@ -344,7 +345,7 @@ class ViewController: UIViewController {
 
     func putColourFormattedTextInTextField(type: AutocompleteTextFieldType, autocompleteResult: String, userQuery : String) {
         let colouredString: NSMutableAttributedString = NSMutableAttributedString(string: userQuery + autocompleteResult)
-        colouredString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.green, range: NSRange(location: userQuery.count,length:autocompleteResult.count))
+        colouredString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.lightGray, range: NSRange(location: userQuery.count,length:autocompleteResult.count))
         switch (type) {
         case AutocompleteTextFieldType.city:
             self.townTextField.attributedText = colouredString
@@ -479,5 +480,27 @@ extension ViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     {
         self.langTextField.text = self.intLangs[row];
         self.langTextField.endEditing(true)
+        self.getCityList(success: { (list) in
+            self.cityAutoCompletionPossibilities = list.data
+            var index = 0
+            for item in self.cityAutoCompletionPossibilities {
+                self.cityAutoCompletionPossibilities[index] = item.capitalizingFirstLetter()
+                print(self.cityAutoCompletionPossibilities[index])
+                index += 1
+            }
+        }, failure: {
+            
+        }, interface_lang: langTextField.text!)
+        self.getSubjectList(success: { (list) in
+            self.subjectAutoCompletionPossibilities = list.data
+            var index = 0
+            for item in self.subjectAutoCompletionPossibilities {
+                self.subjectAutoCompletionPossibilities[index] = item.capitalizingFirstLetter()
+                print(self.subjectAutoCompletionPossibilities[index])
+                index += 1
+            }
+        }, failure: {
+            
+        }, interface_lang: langTextField.text!)
     }
 }

@@ -13,6 +13,7 @@ class UniversitiesViewController: UIViewController {
     let cellId = "ResultTableViewCell"
     let cellSpacingHeight: CGFloat = 30
     var universitiesList: [University] = []
+    var expandedRequest: [Bool] = []
     lazy var backBtn: UIButton = {
         let btn = UIButton()
         let image = UIImage(named: "back")?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
@@ -67,16 +68,17 @@ extension UniversitiesViewController: UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! UniversitiesCollectionViewCell
         cell.university = universitiesList[indexPath.row]
+//        cell.ifExpanded = expandedRequest[indexPath.row]
         return cell
     }
     
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-    //        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-    //    }
-    //
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-    //        return CGSize(width: view.bounds.width, height: 100)
-    //    }
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+            return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        }
+    
+//        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//            return CGSize(width: view.bounds.width, height: 100)
+//        }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,

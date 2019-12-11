@@ -10,6 +10,6 @@ import Foundation
 struct University: Codable {
     var name: String
     var site: String
-    var code: Int
+    var code: String
     var city: String
 }

@@ -10,11 +10,12 @@ import UIKit
 
 class UniversitiesCollectionViewCell: UICollectionViewCell {
     var ifExpanded = false
-    var university: University = University(name: "DD", site: "dwq", code: 213, city: "ewf") {
+    var university: University = University(name: "DD", site: "dwq", code: "213", city: "ewf") {
         didSet {
             universityCodeLabel.text = String(university.code)
             universityNameLabel.text = university.name
             cityNameLabel.text = university.city
+            siteTextView.text = university.site
         }
     }
     var universities: [University] = []
@@ -29,6 +30,7 @@ class UniversitiesCollectionViewCell: UICollectionViewCell {
         var lbl = UILabel()
         lbl.text = "Фармация"
         lbl.numberOfLines = 0
+        lbl.preferredMaxLayoutWidth = CGFloat(UIScreen.main.bounds.width - 60)
         lbl.font = UIFont.systemFont(ofSize: 26)
         return lbl
     }()
@@ -68,7 +70,7 @@ class UniversitiesCollectionViewCell: UICollectionViewCell {
     lazy var cityNameLabel: UILabel = {
         var lbl = UILabel()
         lbl.text = "Pavlodar"
-        lbl.preferredMaxLayoutWidth = CGFloat(UIScreen.main.bounds.width - 40)
+        lbl.preferredMaxLayoutWidth = CGFloat(UIScreen.main.bounds.width - 20)
         lbl.numberOfLines = 0
         return lbl
     }()
