@@ -262,18 +262,18 @@ class ViewController: UIViewController {
     
     @objc func showResultsDidTaped() {
         validateFields()
-        let firstSubject = firstSubjectTextField.text!
-        let secondSubject = secondSubjectTextField.text!
+        let firstSubject = firstSubjectTextField.text!.lowercased()
+        let secondSubject = secondSubjectTextField.text!.lowercased()
         let city = canRelocateSwitch.isOn ? "ALL" : townTextField.text!
         let interfaceLang = "en"
-        let score = 100
-        let resultsVC = ResultsViewController()
+        let score = Int(entScoreTextField.text!)
         getRecommendations(success: { results in
+            let resultsVC = ResultsViewController()
             resultsVC.resultsList = results
             self.navigationController?.pushViewController(resultsVC, animated: true)
         }, failure: {
             
-        }, firstSubject: firstSubject, secondSubject: secondSubject, city: city, score: score, interface_lang: interfaceLang)
+        }, firstSubject: firstSubject, secondSubject: secondSubject, city: city, score: score ?? 0, interface_lang: interfaceLang)
     }
     
     func validateFields() {

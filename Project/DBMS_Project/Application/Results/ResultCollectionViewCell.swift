@@ -87,6 +87,7 @@ extension ResultCollectionViewCell: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let universitiesVC = UniversitiesViewController()
         universitiesVC.universitiesList = specialities[indexPath.row].universities
+        print("AIBOL", specialities[indexPath.row].universities.count)
         viewController.navigationController?.pushViewController(universitiesVC, animated: true)
     }
     
@@ -122,9 +123,7 @@ extension ResultCollectionViewCell {
             make.height.equalTo(50)
         }
         professionCollectionView.snp.makeConstraints { (make) in
-            make.left.right.equalTo(professionBtn)
-            make.bottom.equalToSuperview()
-            make.top.equalTo(professionBtn.snp.bottom)
+            make.top.bottom.equalTo(professionBtn.snp.bottom)
         }
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 
 class UniversitiesCollectionViewCell: UICollectionViewCell {
     var ifExpanded = false
-    var university: University = University(name: "DD", site: "dwq", code: 213, city: "ewf", grant_total: 213, grant_rus: 32, grant_kaz: 32) {
+    var university: University = University(name: "DD", site: "dwq", code: 213, city: "ewf") {
         didSet {
             universityCodeLabel.text = String(university.code)
             universityNameLabel.text = university.name
@@ -134,27 +134,27 @@ class UniversitiesCollectionViewCell: UICollectionViewCell {
 //        view.backgroundColor = UIColor.rgbColor(r: 0, g: 0, b: 0, alpha: 0.05)
 //        return view
 //    }()
-//    lazy var siteTitleLabel: UILabel = {
-//        var lbl = UILabel()
-//        lbl.text = "Site"
-//        lbl.font = UIFont.boldSystemFont(ofSize: 14)
-//        lbl.numberOfLines = 0
-//        lbl.textColor = Constants.mainColor
-//        return lbl
-//    }()
-//    lazy var siteTextView: UITextView = {
-//        var tv = UITextView()
-//        tv.text = "http://sirdariya.kz"
-//        tv.font = UIFont.systemFont(ofSize: 18)
-//        tv.isEditable = false
-//        tv.dataDetectorTypes = UIDataDetectorTypes.all
-//        return tv
-//    }()
-//    lazy var siteSeparationView: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = UIColor.rgbColor(r: 0, g: 0, b: 0, alpha: 0.05)
-//        return view
-//    }()
+    lazy var siteTitleLabel: UILabel = {
+        var lbl = UILabel()
+        lbl.text = "Site"
+        lbl.font = UIFont.boldSystemFont(ofSize: 14)
+        lbl.numberOfLines = 0
+        lbl.textColor = Constants.mainColor
+        return lbl
+    }()
+    lazy var siteTextView: UITextView = {
+        var tv = UITextView()
+        tv.text = "http://sirdariya.kz"
+        tv.font = UIFont.systemFont(ofSize: 18)
+        tv.isEditable = false
+        tv.dataDetectorTypes = UIDataDetectorTypes.all
+        return tv
+    }()
+    lazy var siteSeparationView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.rgbColor(r: 0, g: 0, b: 0, alpha: 0.05)
+        return view
+    }()
 //    lazy var examScoreLabel: UILabel = {
 //        var lbl = UILabel()
 //        lbl.text = "99"
@@ -219,9 +219,9 @@ extension UniversitiesCollectionViewCell {
         addSubview(cityNameTitleLabel)
         addSubview(cityNameLabel)
         addSubview(citySeparationView)
-//        addSubview(siteTitleLabel)
-//        addSubview(siteTextView)
-//        addSubview(siteSeparationView)
+        addSubview(siteTitleLabel)
+        addSubview(siteTextView)
+        addSubview(siteSeparationView)
         
     }
     
@@ -329,22 +329,22 @@ extension UniversitiesCollectionViewCell {
             make.top.equalTo(cityNameLabel.snp.bottom).offset(10)
             make.height.equalTo(1)
             make.left.right.equalToSuperview()
+        }
+        siteTitleLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(citySeparationView.snp.bottom).offset(15)
+            make.left.right.equalTo(universityCodeLabel)
+        }
+        siteTextView.snp.makeConstraints { (make) in
+            make.top.equalTo(siteTitleLabel.snp.bottom).offset(5)
+            make.left.right.equalTo(universityCodeLabel)
+            make.height.equalTo(30)
+        }
+        siteSeparationView.snp.makeConstraints { (make) in
+            make.top.equalTo(siteTextView.snp.bottom).offset(10)
+            make.height.equalTo(1)
+            make.left.right.equalToSuperview()
             make.bottom.equalToSuperview()
         }
-//        siteTitleLabel.snp.makeConstraints { (make) in
-//            make.top.equalTo(citySeparationView.snp.bottom).offset(15)
-//            make.left.right.equalTo(universityCodeLabel)
-//        }
-//        siteTextView.snp.makeConstraints { (make) in
-//            make.top.equalTo(siteTitleLabel.snp.bottom).offset(5)
-//            make.left.right.equalTo(universityCodeLabel)
-//            make.height.equalTo(30)
-//        }
-//        siteSeparationView.snp.makeConstraints { (make) in
-//            make.top.equalTo(siteTextView.snp.bottom).offset(10)
-//            make.height.equalTo(1)
-//            make.left.right.equalToSuperview()
-//        }
     }
     
 //    @objc func moreInfoDidTaped() {

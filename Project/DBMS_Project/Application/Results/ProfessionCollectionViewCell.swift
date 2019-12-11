@@ -17,7 +17,7 @@ class ProfessionCollectionViewCell: UICollectionViewCell {
 //            cityNameLabel.text = result.city_name
 //        }
 //    }
-    var speciality: Speciality = Speciality(name: "", code: "", universities: []) {
+    var speciality: Speciality = Speciality(name: "", code: "", description: "", universities: [], total_grant: 100, grant_rus: 30, grant_kaz: 40) {
         didSet {
             universities = speciality.universities
             titleLabel.text = speciality.name

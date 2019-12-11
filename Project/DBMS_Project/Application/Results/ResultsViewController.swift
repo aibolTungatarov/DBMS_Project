@@ -38,12 +38,12 @@ class ResultsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        resultsList.append(Results(profession: "UX/UI designeer", specialities: [Speciality(name: "Computer Science", code: "231", universities: [
-                University(name: "Suleyman Demirel University", site: "ewq", code: 123, city: "few", grant_total: 321, grant_rus: 32, grant_kaz: 32)
-            ]), Speciality(name: "Information systems", code: "231", universities: [])]))
-        resultsList.append(Results(profession: "UX/UI designeer", specialities: [Speciality(name: "Computer Science", code: "231", universities: [
-            University(name: "Suleyman Demirel University", site: "ewq", code: 123, city: "few", grant_total: 321, grant_rus: 32, grant_kaz: 32)
-            ]), Speciality(name: "Information systems", code: "231", universities: [])]))
+//        resultsList.append(Results(profession: "UX/UI designeer", specialities: [Speciality(name: "Computer Science", code: "231", universities: [
+//                University(name: "Suleyman Demirel University", site: "ewq", code: 123, city: "few", grant_total: 321, grant_rus: 32, grant_kaz: 32)
+//            ]), Speciality(name: "Information systems", code: "231", universities: [])]))
+//        resultsList.append(Results(profession: "UX/UI designeer", specialities: [Speciality(name: "Computer Science", code: "231", universities: [
+//            University(name: "Suleyman Demirel University", site: "ewq", code: 123, city: "few", grant_total: 321, grant_rus: 32, grant_kaz: 32)
+//            ]), Speciality(name: "Information systems", code: "231", universities: [])]))
         configUI()
         makeConstraints()
     }

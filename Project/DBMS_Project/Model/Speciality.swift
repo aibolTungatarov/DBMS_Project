@@ -11,5 +11,9 @@ import Foundation
 struct Speciality: Codable {
     var name: String
     var code: String
+    var description: String
     var universities: [University]
+    var total_grant: Int
+    var grant_rus: Int
+    var grant_kaz: Int
 }

@@ -12,7 +12,4 @@ struct University: Codable {
     var site: String
     var code: Int
     var city: String
-    var grant_total: Int
-    var grant_rus: Int
-    var grant_kaz: Int
 }
